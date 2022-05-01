@@ -11,8 +11,6 @@ class UBignum
 
 private:
     std::string digits;
-    std::string addPositives(UBignum, UBignum) const;
-    std::string difPositives(UBignum, UBignum) const;
 
 public:
     UBignum(std::string = "0");

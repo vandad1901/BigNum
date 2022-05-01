@@ -86,12 +86,35 @@ bool UBignum::operator>=(UBignum v2) const
 
 UBignum UBignum::operator+(UBignum v2) const
 {
-    return addPositives(*this, v2);
+    UBignum v1 = (*this);
+    int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
+    string ans(max(alen, blen) + 1, '0');
+    for (int i = 0; i < max(alen, blen); i++)
+    {
+        adigit = i < alen ? (v1[i] - '0') : 0;
+        bdigit = i < blen ? (v2[i] - '0') : 0;
+        ans[ans.length() - i - 1] = ((adigit + bdigit + carry) % 10) + '0';
+        carry = (adigit + bdigit + carry) > 9 ? 1 : 0;
+    }
+    ans[0] = carry + '0';
+    return ans;
 }
 UBignum UBignum::operator-(UBignum v2) const
 {
     if ((*this) >= v2)
-        return difPositives(*this, v2);
+    {
+        UBignum v1 = (*this);
+        int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
+        string ans(max(alen, blen) + 1, '0');
+        for (int i = 0; i < max(alen, blen); i++)
+        {
+            adigit = i < alen ? (v1[i] - '0') : 0;
+            bdigit = i < blen ? (v2[i] - '0') : 0;
+            ans[ans.length() - i - 1] = ((adigit - bdigit + carry + 10) % 10) + '0';
+            carry = (adigit - bdigit + carry) < 0 ? -1 : 0;
+        }
+        return ans;
+    }
     else
         throw invalid_argument("This subtraction results in a negative value");
 }
@@ -173,32 +196,4 @@ std::istream &operator>>(std::istream &input, UBignum &v)
     input >> temp;
     v = UBignum(temp);
     return input;
-}
-
-string UBignum::addPositives(UBignum a, UBignum b) const
-{
-    int adigit, bdigit, carry = 0, alen = a.length(), blen = b.length();
-    string ans(max(alen, blen) + 1, '0');
-    for (int i = 0; i < max(alen, blen); i++)
-    {
-        adigit = i < alen ? (a[i] - '0') : 0;
-        bdigit = i < blen ? (b[i] - '0') : 0;
-        ans[ans.length() - i - 1] = ((adigit + bdigit + carry) % 10) + '0';
-        carry = (adigit + bdigit + carry) > 9 ? 1 : 0;
-    }
-    ans[0] = carry + '0';
-    return ans;
-}
-string UBignum::difPositives(UBignum a, UBignum b) const
-{
-    int adigit, bdigit, carry = 0, alen = a.length(), blen = b.length();
-    string ans(max(alen, blen) + 1, '0');
-    for (int i = 0; i < max(alen, blen); i++)
-    {
-        adigit = i < alen ? (a[i] - '0') : 0;
-        bdigit = i < blen ? (b[i] - '0') : 0;
-        ans[ans.length() - i - 1] = ((adigit - bdigit + carry + 10) % 10) + '0';
-        carry = (adigit - bdigit + carry) < 0 ? -1 : 0;
-    }
-    return ans;
 }
