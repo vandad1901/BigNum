@@ -6,9 +6,9 @@ using namespace std;
 
 SBignum::SBignum(string str)
 {
-    if (str[0] == '-')
+    if (str[0] == '-' || str[0] == '+')
     {
-        setIsNegative(true);
+        setIsNegative(str[0] == '-');
         str = str.substr(1, str.length() - 1);
     }
     else
