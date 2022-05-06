@@ -3,7 +3,7 @@
 #include <string>
 #include "Ubignum.hpp"
 
-//Unsigned Big Number
+// Unsigned Big Number
 
 class SBignum
 {
@@ -23,6 +23,8 @@ public:
     void setAbs(UBignum);
     bool getIsNegative() const;
     void setIsNegative(bool);
+    friend void swap(SBignum &, SBignum &);
+    SBignum &operator=(SBignum);
 
     int length() const;
     char operator[](int index) const;

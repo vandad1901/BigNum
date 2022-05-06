@@ -9,6 +9,7 @@ UBignum::UBignum(long long int num)
 {
     setDigits(std::to_string(num));
 }
+
 std::string UBignum::getDigits() const
 {
     return digits;
@@ -32,6 +33,15 @@ void UBignum::setDigits(std::string str)
         digits = "0";
     else
         digits = str.substr(lastLeadingZero + 1, str.length() - lastLeadingZero - 1);
+}
+void swap(UBignum &v1, UBignum &v2)
+{
+    std::swap(v1.digits, v2.digits);
+}
+UBignum &UBignum::operator=(UBignum v2)
+{
+    swap(*this, v2);
+    return *this;
 }
 
 int UBignum::length() const

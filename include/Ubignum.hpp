@@ -15,8 +15,11 @@ private:
 public:
     UBignum(std::string = "0");
     UBignum(long long int);
+
     std::string getDigits() const;
     void setDigits(std::string);
+    friend void swap(UBignum &, UBignum &);
+    UBignum &operator=(UBignum);
 
     int length() const;
     char operator[](int index) const;

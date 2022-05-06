@@ -25,6 +25,7 @@ SBignum::SBignum(UBignum num, bool val)
     setAbs(num);
     setIsNegative(val);
 }
+
 UBignum SBignum::getAbs() const
 {
     return abs;
@@ -40,6 +41,16 @@ bool SBignum::getIsNegative() const
 void SBignum::setIsNegative(bool val)
 {
     isNegative = val;
+}
+void swap(SBignum &v1, SBignum &v2)
+{
+    std::swap(v1.abs, v2.abs);
+    std::swap(v1.isNegative, v2.isNegative);
+}
+SBignum &SBignum::operator=(SBignum v2)
+{
+    swap(*this, v2);
+    return *this;
 }
 
 int SBignum::length() const
