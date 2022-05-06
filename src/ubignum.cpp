@@ -1,21 +1,19 @@
 #include <iostream>
 #include "ubignum.hpp"
 
-using namespace std;
-
-UBignum::UBignum(string str)
+UBignum::UBignum(std::string str)
 {
     setDigits(str);
 }
 UBignum::UBignum(long long int num)
 {
-    setDigits(to_string(num));
+    setDigits(std::to_string(num));
 }
-string UBignum::getDigits() const
+std::string UBignum::getDigits() const
 {
     return digits;
 }
-void UBignum::setDigits(string str)
+void UBignum::setDigits(std::string str)
 {
     int lastLeadingZero = -1;
     for (int i = 0; i < str.length(); i++)
@@ -45,7 +43,7 @@ char UBignum::operator[](int index) const
     if (index < length())
         return getDigits()[length() - index - 1];
     else
-        throw out_of_range("The index is not in the acceptable range");
+        throw std::out_of_range("The index is not in the acceptable range");
 }
 
 bool UBignum::operator<(UBignum v2) const
@@ -88,8 +86,8 @@ UBignum UBignum::operator+(UBignum v2) const
 {
     UBignum v1 = (*this);
     int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
-    string ans(max(alen, blen) + 1, '0');
-    for (int i = 0; i < max(alen, blen); i++)
+    std::string ans(std::max(alen, blen) + 1, '0');
+    for (int i = 0; i < std::max(alen, blen); i++)
     {
         adigit = i < alen ? (v1[i] - '0') : 0;
         bdigit = i < blen ? (v2[i] - '0') : 0;
@@ -105,8 +103,8 @@ UBignum UBignum::operator-(UBignum v2) const
     {
         UBignum v1 = (*this);
         int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
-        string ans(max(alen, blen) + 1, '0');
-        for (int i = 0; i < max(alen, blen); i++)
+        std::string ans(std::max(alen, blen) + 1, '0');
+        for (int i = 0; i < std::max(alen, blen); i++)
         {
             adigit = i < alen ? (v1[i] - '0') : 0;
             bdigit = i < blen ? (v2[i] - '0') : 0;
@@ -116,7 +114,7 @@ UBignum UBignum::operator-(UBignum v2) const
         return ans;
     }
     else
-        throw invalid_argument("This subtraction results in a negative value");
+        throw std::invalid_argument("This subtraction results in a negative value");
 }
 UBignum UBignum::operator*(UBignum v2) const
 {
@@ -124,7 +122,7 @@ UBignum UBignum::operator*(UBignum v2) const
     int carry = 0;
     if (v1 == 0 || v2 == 0)
         return 0;
-    string ans(v1.length() + v2.length(), 0);
+    std::string ans(v1.length() + v2.length(), 0);
     for (int i = 0; i < v1.length(); i++)
     {
         for (int j = 0; j < v2.length(); j++)
@@ -145,7 +143,7 @@ UBignum UBignum::operator/(UBignum v2) const
 {
     if (v2 == 0)
     {
-        throw invalid_argument("Cannot divide by zero");
+        throw std::invalid_argument("Cannot divide by zero");
     }
     UBignum v1 = (*this).getDigits();
     UBignum temp = 0, i;
@@ -158,7 +156,7 @@ UBignum UBignum::operator/(UBignum v2) const
 UBignum UBignum::operator/(long long int v2) const
 {
     UBignum v1 = (*this).getDigits();
-    string ans;
+    std::string ans;
     for (int i = 0, temp = 0; i <= v1.length(); temp = (temp % v2) * 10 + v1[v1.length() - (i++) - 1] - '0')
         ans += (temp / v2) + '0';
     return ans;
@@ -178,11 +176,11 @@ void UBignum::printWithDelimiter()
 {
     for (int i = length() - 1; i >= 0; i--)
     {
-        cout << (*this)[i];
+        std::cout << (*this)[i];
         if (i % 3 == 0 && i > 0)
-            cout << ",";
+            std::cout << ",";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &output, const UBignum &v)
@@ -192,7 +190,7 @@ std::ostream &operator<<(std::ostream &output, const UBignum &v)
 }
 std::istream &operator>>(std::istream &input, UBignum &v)
 {
-    string temp;
+    std::string temp;
     input >> temp;
     v = UBignum(temp);
     return input;

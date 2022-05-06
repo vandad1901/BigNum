@@ -2,9 +2,7 @@
 #include "sbignum.hpp"
 #include "ubignum.hpp"
 
-using namespace std;
-
-SBignum::SBignum(string str)
+SBignum::SBignum(std::string str)
 {
     if (str[0] == '-' || str[0] == '+')
     {
@@ -93,7 +91,7 @@ SBignum SBignum::operator+(SBignum v2) const
         return ans;
     }
 
-    ans = max(v1.getAbs(), v2.getAbs()) - min(v1.getAbs(), v2.getAbs());
+    ans = std::max(v1.getAbs(), v2.getAbs()) - std::min(v1.getAbs(), v2.getAbs());
     ans.setIsNegative((v1.getAbs() >= v2.getAbs()) ^ v2.getIsNegative());
     return ans;
 }
@@ -141,7 +139,7 @@ SBignum SBignum::operator%(long long int v2) const
 void SBignum::printWithDelimiter()
 {
     if (getIsNegative())
-        cout << "-";
+        std::cout << "-";
     getAbs().printWithDelimiter();
 }
 
@@ -154,7 +152,7 @@ std::ostream &operator<<(std::ostream &output, const SBignum &v)
 }
 std::istream &operator>>(std::istream &input, SBignum &v)
 {
-    string temp;
+    std::string temp;
     input >> temp;
     v = SBignum(temp);
     return input;
