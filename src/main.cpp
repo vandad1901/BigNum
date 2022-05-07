@@ -49,5 +49,5 @@ int main()
         cout << e.what() << endl;
     }
     cout << "\nv1.printDelimiter()\n";
-    v1.printWithDelimiter();
+    v1.printDelimiter();
 }

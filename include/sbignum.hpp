@@ -53,7 +53,7 @@ public:
     friend SBignum operator%(SBignum lhs, const SBignum rhs);
     friend SBignum operator%(SBignum lhs, const long long int rhs);
 
-    void printWithDelimiter();
+    void printDelimiter();
 };
 
 #endif

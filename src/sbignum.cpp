@@ -195,11 +195,11 @@ SBignum operator%(SBignum lhs, const long long int rhs)
     return lhs;
 }
 
-void SBignum::printWithDelimiter()
+void SBignum::printDelimiter()
 {
     if (getIsNegative())
         std::cout << "-";
-    getAbs().printWithDelimiter();
+    getAbs().printDelimiter();
 }
 
 std::ostream &operator<<(std::ostream &output, const SBignum &v)

@@ -235,7 +235,7 @@ UBignum operator%(UBignum lhs, const long long int rhs)
     return lhs;
 }
 
-void UBignum::printWithDelimiter()
+void UBignum::printDelimiter()
 {
     for (int i = length() - 1; i >= 0; i--)
     {

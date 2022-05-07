@@ -46,7 +46,7 @@ public:
     friend UBignum operator%(UBignum lhs, const UBignum rhs);
     friend UBignum operator%(UBignum lhs, const long long int rhs);
 
-    void printWithDelimiter();
+    void printDelimiter();
 };
 
 #endif
