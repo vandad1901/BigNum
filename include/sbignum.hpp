@@ -25,25 +25,33 @@ public:
     void setIsNegative(bool);
     friend void swap(SBignum &, SBignum &);
     SBignum &operator=(SBignum);
+    SBignum operator+() const;
+    SBignum operator-() const;
+    SBignum &operator+=(const SBignum &);
+    SBignum &operator-=(const SBignum &);
+    SBignum &operator*=(const SBignum &);
+    SBignum &operator/=(const SBignum &);
+    SBignum &operator/=(const long long int &);
+    SBignum &operator%=(const SBignum &);
+    SBignum &operator%=(const long long int &);
 
     int length() const;
     char operator[](int index) const;
 
-    bool operator<(SBignum) const;
-    bool operator>(SBignum) const;
-    bool operator==(SBignum) const;
-    bool operator!=(SBignum) const;
-    bool operator<=(SBignum) const;
-    bool operator>=(SBignum) const;
+    friend bool operator<(SBignum lhs, const SBignum rhs);
+    friend bool operator>(SBignum lhs, const SBignum rhs);
+    friend bool operator==(SBignum lhs, const SBignum rhs);
+    friend bool operator!=(SBignum lhs, const SBignum rhs);
+    friend bool operator<=(SBignum lhs, const SBignum rhs);
+    friend bool operator>=(SBignum lhs, const SBignum rhs);
 
-    SBignum operator+(SBignum) const;
-    SBignum operator-() const;
-    SBignum operator-(SBignum) const;
-    SBignum operator*(SBignum) const;
-    SBignum operator/(SBignum) const;
-    SBignum operator/(long long int) const;
-    SBignum operator%(SBignum) const;
-    SBignum operator%(long long int) const;
+    friend SBignum operator+(SBignum lhs, const SBignum rhs);
+    friend SBignum operator-(SBignum lhs, const SBignum rhs);
+    friend SBignum operator*(SBignum lhs, const SBignum rhs);
+    friend SBignum operator/(SBignum lhs, const SBignum rhs);
+    friend SBignum operator/(SBignum lhs, const long long int rhs);
+    friend SBignum operator%(SBignum lhs, const SBignum rhs);
+    friend SBignum operator%(SBignum lhs, const long long int rhs);
 
     void printWithDelimiter();
 };

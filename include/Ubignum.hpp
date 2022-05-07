@@ -20,24 +20,31 @@ public:
     void setDigits(std::string);
     friend void swap(UBignum &, UBignum &);
     UBignum &operator=(UBignum);
+    UBignum &operator+=(const UBignum &);
+    UBignum &operator-=(const UBignum &);
+    UBignum &operator*=(const UBignum &);
+    UBignum &operator/=(const UBignum &);
+    UBignum &operator/=(const long long int &);
+    UBignum &operator%=(const UBignum &);
+    UBignum &operator%=(const long long int &);
 
     int length() const;
     char operator[](int index) const;
 
-    bool operator<(UBignum) const;
-    bool operator>(UBignum) const;
-    bool operator==(UBignum) const;
-    bool operator!=(UBignum) const;
-    bool operator<=(UBignum) const;
-    bool operator>=(UBignum) const;
+    friend bool operator<(UBignum lhs, const UBignum rhs);
+    friend bool operator>(UBignum lhs, const UBignum rhs);
+    friend bool operator==(UBignum lhs, const UBignum rhs);
+    friend bool operator!=(UBignum lhs, const UBignum rhs);
+    friend bool operator<=(UBignum lhs, const UBignum rhs);
+    friend bool operator>=(UBignum lhs, const UBignum rhs);
 
-    UBignum operator+(UBignum) const;
-    UBignum operator-(UBignum) const;
-    UBignum operator*(UBignum) const;
-    UBignum operator/(UBignum) const;
-    UBignum operator/(long long int) const;
-    UBignum operator%(UBignum) const;
-    UBignum operator%(long long int) const;
+    friend UBignum operator+(UBignum lhs, const UBignum rhs);
+    friend UBignum operator-(UBignum lhs, const UBignum rhs);
+    friend UBignum operator*(UBignum lhs, const UBignum rhs);
+    friend UBignum operator/(UBignum lhs, const UBignum rhs);
+    friend UBignum operator/(UBignum lhs, const long long int rhs);
+    friend UBignum operator%(UBignum lhs, const UBignum rhs);
+    friend UBignum operator%(UBignum lhs, const long long int rhs);
 
     void printWithDelimiter();
 };

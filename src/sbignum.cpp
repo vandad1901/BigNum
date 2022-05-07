@@ -52,6 +52,74 @@ SBignum &SBignum::operator=(SBignum v2)
     swap(*this, v2);
     return *this;
 }
+SBignum SBignum::operator+() const
+{
+    return *this;
+}
+SBignum SBignum::operator-() const
+{
+    SBignum temp = *this;
+    temp.setIsNegative(!getIsNegative());
+    return temp;
+}
+SBignum &SBignum::operator+=(const SBignum &rhs)
+{
+    SBignum lhs = *this, ans;
+    if (lhs.getIsNegative() == rhs.getIsNegative())
+    {
+        ans.setAbs(lhs.getAbs() + rhs.getAbs());
+        ans.setIsNegative(lhs.getIsNegative());
+    }
+    else
+    {
+        ans = std::max(lhs.getAbs(), rhs.getAbs()) - std::min(lhs.getAbs(), rhs.getAbs());
+        ans.setIsNegative((lhs.getAbs() >= rhs.getAbs()) ^ rhs.getIsNegative());
+    }
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator-=(const SBignum &rhs)
+{
+    SBignum ans = SBignum((*this) + (-rhs));
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator*=(const SBignum &rhs)
+{
+
+    SBignum ans = (*this).abs * rhs.abs;
+    ans.setIsNegative((*this).getIsNegative() ^ rhs.getIsNegative());
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator/=(const SBignum &rhs)
+{
+    SBignum ans = (*this).abs / rhs.abs;
+    ans.setIsNegative((*this).getIsNegative() ^ rhs.getIsNegative());
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator/=(const long long int &rhs)
+{
+    SBignum ans = (*this).abs / rhs;
+    ans.setIsNegative((*this).getIsNegative() ^ (rhs < 0));
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator%=(const SBignum &rhs)
+{
+    SBignum ans = (*this).abs % rhs.abs;
+    ans.setIsNegative((*this).getIsNegative());
+    swap(*this, ans);
+    return *this;
+}
+SBignum &SBignum::operator%=(const long long int &rhs)
+{
+    SBignum ans = (*this).abs % rhs;
+    ans.setIsNegative((*this).getIsNegative());
+    swap(*this, ans);
+    return *this;
+}
 
 int SBignum::length() const
 {
@@ -62,89 +130,69 @@ char SBignum::operator[](int index) const
     return getAbs()[index];
 }
 
-bool SBignum::operator<(SBignum v2) const
+bool operator<(SBignum lhs, const SBignum rhs)
 {
-    SBignum v1 = (*this);
-    if (v1.getIsNegative() == v2.getIsNegative())
+    if (lhs.getIsNegative() == rhs.getIsNegative())
     {
-        return (v1.getAbs() < v2.getAbs()) ^ v1.getIsNegative();
+        return (lhs.getAbs() < rhs.getAbs()) ^ lhs.getIsNegative();
     }
-    return v1.getIsNegative();
+    return lhs.getIsNegative();
 }
-bool SBignum::operator>(SBignum v2) const
+bool operator>(SBignum lhs, const SBignum rhs)
 {
-    return v2 < (*this);
+    return rhs < lhs;
 }
-bool SBignum::operator==(SBignum v2) const
+bool operator==(SBignum lhs, const SBignum rhs)
 {
-    return !((*this) > v2) && !((*this) < v2);
+    return !(lhs > rhs) && !(lhs < rhs);
 }
-bool SBignum::operator!=(SBignum v2) const
+bool operator!=(SBignum lhs, const SBignum rhs)
 {
-    return !((*this) == v2);
+    return !(lhs == rhs);
 }
-bool SBignum::operator<=(SBignum v2) const
+bool operator<=(SBignum lhs, const SBignum rhs)
 {
-    return (*this) < v2 || (*this) == v2;
+    return lhs < rhs || lhs == rhs;
 }
-bool SBignum::operator>=(SBignum v2) const
+bool operator>=(SBignum lhs, const SBignum rhs)
 {
-    return (*this) > v2 || (*this) == v2;
+    return lhs > rhs || lhs == rhs;
 }
 
-SBignum SBignum::operator+(SBignum v2) const
+SBignum operator+(SBignum lhs, const SBignum rhs)
 {
-    SBignum v1 = (*this).abs, ans;
-    if (v1.getIsNegative() == v2.getIsNegative())
-    {
-        ans.setAbs(v1.getAbs() + v2.getAbs());
-        ans.setIsNegative(v1.getIsNegative());
-        return ans;
-    }
-
-    ans = std::max(v1.getAbs(), v2.getAbs()) - std::min(v1.getAbs(), v2.getAbs());
-    ans.setIsNegative((v1.getAbs() >= v2.getAbs()) ^ v2.getIsNegative());
-    return ans;
+    lhs += rhs;
+    return lhs;
 }
-SBignum SBignum::operator-() const
+SBignum operator-(SBignum lhs, const SBignum rhs)
 {
-    SBignum temp = (*this).abs;
-    temp.setIsNegative(!getIsNegative());
-    return temp;
+    lhs -= rhs;
+    return lhs;
 }
-SBignum SBignum::operator-(SBignum v2) const
+SBignum operator*(SBignum lhs, const SBignum rhs)
 {
-    return (*this) + (-v2);
+    lhs *= rhs;
+    return lhs;
 }
-SBignum SBignum::operator*(SBignum v2) const
+SBignum operator/(SBignum lhs, const SBignum rhs)
 {
-    SBignum temp = (*this).abs * v2.abs;
-    temp.setIsNegative((*this).getIsNegative() ^ v2.getIsNegative());
-    return temp;
+    lhs /= rhs;
+    return lhs;
 }
-SBignum SBignum::operator/(SBignum v2) const
+SBignum operator/(SBignum lhs, const long long int rhs)
 {
-    SBignum temp = (*this).abs / v2.abs;
-    temp.setIsNegative((*this).getIsNegative() ^ v2.getIsNegative());
-    return temp;
+    lhs /= rhs;
+    return lhs;
 }
-SBignum SBignum::operator/(long long int v2) const
+SBignum operator%(SBignum lhs, const SBignum rhs)
 {
-    SBignum temp = (*this).abs / v2;
-    temp.setIsNegative((*this).getIsNegative() ^ v2 < 0);
-    return temp;
+    lhs %= rhs;
+    return lhs;
 }
-SBignum SBignum::operator%(SBignum v2) const
+SBignum operator%(SBignum lhs, const long long int rhs)
 {
-    SBignum temp = (*this).abs % v2.abs;
-    temp.setIsNegative((*this).getIsNegative());
-    return temp;
-}
-SBignum SBignum::operator%(long long int v2) const
-{
-    SBignum temp = (*this).abs % v2;
-    temp.setIsNegative((*this).getIsNegative());
-    return temp;
+    lhs %= rhs;
+    return lhs;
 }
 
 void SBignum::printWithDelimiter()

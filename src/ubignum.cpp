@@ -43,6 +43,114 @@ UBignum &UBignum::operator=(UBignum v2)
     swap(*this, v2);
     return *this;
 }
+UBignum &UBignum::operator+=(const UBignum &rhs)
+{
+    UBignum lhs = (*this);
+    int adigit, bdigit, carry = 0, alen = lhs.length(), blen = rhs.length();
+    std::string ans(std::max(alen, blen) + 1, '0');
+    for (int i = 0; i < std::max(alen, blen); i++)
+    {
+        adigit = i < alen ? (lhs[i] - '0') : 0;
+        bdigit = i < blen ? (rhs[i] - '0') : 0;
+        ans[ans.length() - i - 1] = ((adigit + bdigit + carry) % 10) + '0';
+        carry = (adigit + bdigit + carry) > 9 ? 1 : 0;
+    }
+    ans[0] = carry + '0';
+    UBignum temp = UBignum(ans);
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator-=(const UBignum &rhs)
+{
+    if ((*this) >= rhs)
+    {
+        UBignum lhs = (*this);
+        int adigit, bdigit, carry = 0, alen = lhs.length(), blen = rhs.length();
+        std::string ans(std::max(alen, blen) + 1, '0');
+        for (int i = 0; i < std::max(alen, blen); i++)
+        {
+            adigit = i < alen ? (lhs[i] - '0') : 0;
+            bdigit = i < blen ? (rhs[i] - '0') : 0;
+            ans[ans.length() - i - 1] = ((adigit - bdigit + carry + 10) % 10) + '0';
+            carry = (adigit - bdigit + carry) < 0 ? -1 : 0;
+        }
+        UBignum temp = UBignum(ans);
+        swap(*this, temp);
+        return *this;
+    }
+    else
+        throw std::invalid_argument("This subtraction results in a negative value");
+}
+UBignum &UBignum::operator*=(const UBignum &rhs)
+{
+    UBignum lhs = (*this);
+    int carry = 0;
+    if (lhs == 0 || rhs == 0)
+    {
+        UBignum temp = UBignum(0);
+        swap(*this, temp);
+        return *this;
+    }
+    std::string ans(lhs.length() + rhs.length(), 0);
+    for (int i = 0; i < lhs.length(); i++)
+    {
+        for (int j = 0; j < rhs.length(); j++)
+        {
+            carry = (lhs[i] - '0') * (rhs[j] - '0') + ans[lhs.length() + rhs.length() - (i + j + 1)];
+            ans[lhs.length() + rhs.length() - (i + j + 1)] = carry % 10;  // v1+v2-1 to 1
+            ans[lhs.length() + rhs.length() - (i + j + 2)] += carry / 10; // v1+v2-2 to 0
+        }
+    }
+
+    for (int i = 0; i < ans.length(); i++)
+    {
+        ans[i] += '0';
+    }
+    UBignum temp = UBignum(ans);
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator/=(const UBignum &rhs)
+{
+    if (rhs == 0)
+    {
+        throw std::invalid_argument("Cannot divide by zero");
+    }
+    UBignum lhs = *this;
+    UBignum ans = 0, i;
+    for (i = 0; i < lhs; i = i + rhs)
+    {
+        ans = ans + 1;
+    }
+    UBignum temp = UBignum(ans - int(i > lhs));
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator/=(const long long int &rhs)
+{
+    UBignum lhs = (*this);
+    std::string ans;
+    for (int i = 0, temp = 0; i <= lhs.length(); temp = (temp % rhs) * 10 + lhs[lhs.length() - (i++) - 1] - '0')
+        ans += (temp / rhs) + '0';
+
+    UBignum temp = UBignum(ans);
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator%=(const UBignum &rhs)
+{
+    UBignum lhs = *this;
+    UBignum temp = UBignum(lhs - (lhs / rhs) * rhs);
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator%=(const long long int &rhs)
+{
+    UBignum lhs = *this;
+    UBignum temp = UBignum(lhs - (lhs / rhs) * rhs);
+    swap(*this, temp);
+    return *this;
+}
 
 int UBignum::length() const
 {
@@ -56,130 +164,75 @@ char UBignum::operator[](int index) const
         throw std::out_of_range("The index is not in the acceptable range");
 }
 
-bool UBignum::operator<(UBignum v2) const
+bool operator<(UBignum lhs, const UBignum rhs)
 {
-    UBignum v1 = *this;
-    if (length() < v2.length())
+    if (lhs.length() < rhs.length())
         return true;
-    if (length() > v2.length())
+    if (lhs.length() > rhs.length())
         return false;
-    for (int i = 0; i < length(); i++)
-        if ((*this).digits[i] < v2.digits[i])
+    for (int i = 0; i < lhs.length(); i++)
+        if (lhs.digits[i] < rhs.digits[i])
             return true;
-        else if ((*this).digits[i] > v2.digits[i])
+        else if (lhs.digits[i] > rhs.digits[i])
             return false;
 
     return false;
 }
-bool UBignum::operator>(UBignum v2) const
+bool operator>(UBignum lhs, const UBignum rhs)
 {
-    return v2 < (*this);
+    return rhs < lhs;
 }
-bool UBignum::operator==(UBignum v2) const
+bool operator==(UBignum lhs, const UBignum rhs)
 {
-    return !((*this) > v2) && !((*this) < v2);
+    return !(lhs > rhs) && !(lhs < rhs);
 }
-bool UBignum::operator!=(UBignum v2) const
+bool operator!=(UBignum lhs, const UBignum rhs)
 {
-    return !((*this) == v2);
+    return !(lhs == rhs);
 }
-bool UBignum::operator<=(UBignum v2) const
+bool operator<=(UBignum lhs, const UBignum rhs)
 {
-    return (*this) < v2 || (*this) == v2;
+    return lhs < rhs || lhs == rhs;
 }
-bool UBignum::operator>=(UBignum v2) const
+bool operator>=(UBignum lhs, const UBignum rhs)
 {
-    return (*this) > v2 || (*this) == v2;
+    return lhs > rhs || lhs == rhs;
 }
 
-UBignum UBignum::operator+(UBignum v2) const
+UBignum operator+(UBignum lhs, const UBignum rhs)
 {
-    UBignum v1 = (*this);
-    int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
-    std::string ans(std::max(alen, blen) + 1, '0');
-    for (int i = 0; i < std::max(alen, blen); i++)
-    {
-        adigit = i < alen ? (v1[i] - '0') : 0;
-        bdigit = i < blen ? (v2[i] - '0') : 0;
-        ans[ans.length() - i - 1] = ((adigit + bdigit + carry) % 10) + '0';
-        carry = (adigit + bdigit + carry) > 9 ? 1 : 0;
-    }
-    ans[0] = carry + '0';
-    return ans;
+    lhs += rhs;
+    return lhs;
 }
-UBignum UBignum::operator-(UBignum v2) const
+UBignum operator-(UBignum lhs, const UBignum rhs)
 {
-    if ((*this) >= v2)
-    {
-        UBignum v1 = (*this);
-        int adigit, bdigit, carry = 0, alen = v1.length(), blen = v2.length();
-        std::string ans(std::max(alen, blen) + 1, '0');
-        for (int i = 0; i < std::max(alen, blen); i++)
-        {
-            adigit = i < alen ? (v1[i] - '0') : 0;
-            bdigit = i < blen ? (v2[i] - '0') : 0;
-            ans[ans.length() - i - 1] = ((adigit - bdigit + carry + 10) % 10) + '0';
-            carry = (adigit - bdigit + carry) < 0 ? -1 : 0;
-        }
-        return ans;
-    }
-    else
-        throw std::invalid_argument("This subtraction results in a negative value");
+    lhs -= rhs;
+    return lhs;
 }
-UBignum UBignum::operator*(UBignum v2) const
+UBignum operator*(UBignum lhs, const UBignum rhs)
 {
-    UBignum v1 = (*this).getDigits();
-    int carry = 0;
-    if (v1 == 0 || v2 == 0)
-        return 0;
-    std::string ans(v1.length() + v2.length(), 0);
-    for (int i = 0; i < v1.length(); i++)
-    {
-        for (int j = 0; j < v2.length(); j++)
-        {
-            carry = (v1[i] - '0') * (v2[j] - '0') + ans[v1.length() + v2.length() - (i + j + 1)];
-            ans[v1.length() + v2.length() - (i + j + 1)] = carry % 10;  // v1+v2-1 to 1
-            ans[v1.length() + v2.length() - (i + j + 2)] += carry / 10; // v1+v2-2 to 0
-        }
-    }
-
-    for (int i = 0; i < ans.length(); i++)
-    {
-        ans[i] += '0';
-    }
-    return ans;
+    lhs *= rhs;
+    return lhs;
 }
-UBignum UBignum::operator/(UBignum v2) const
+UBignum operator/(UBignum lhs, const UBignum rhs)
 {
-    if (v2 == 0)
-    {
-        throw std::invalid_argument("Cannot divide by zero");
-    }
-    UBignum v1 = (*this).getDigits();
-    UBignum temp = 0, i;
-    for (i = 0; i < v1; i = i + v2)
-    {
-        temp = temp + 1;
-    }
-    return temp - int(i > v1);
+    lhs /= rhs;
+    return lhs;
 }
-UBignum UBignum::operator/(long long int v2) const
+UBignum operator/(UBignum lhs, const long long int rhs)
 {
-    UBignum v1 = (*this).getDigits();
-    std::string ans;
-    for (int i = 0, temp = 0; i <= v1.length(); temp = (temp % v2) * 10 + v1[v1.length() - (i++) - 1] - '0')
-        ans += (temp / v2) + '0';
-    return ans;
+    lhs /= rhs;
+    return lhs;
 }
-UBignum UBignum::operator%(UBignum v2) const
+UBignum operator%(UBignum lhs, const UBignum rhs)
 {
-    UBignum v1 = (*this).getDigits();
-    return v1 - (v1 / v2) * v2;
+    lhs %= rhs;
+    return lhs;
 }
-UBignum UBignum::operator%(long long int v2) const
+UBignum operator%(UBignum lhs, const long long int rhs)
 {
-    UBignum v1 = (*this).getDigits();
-    return v1 - (v1 / v2) * v2;
+    lhs %= rhs;
+    return lhs;
 }
 
 void UBignum::printWithDelimiter()
