@@ -1,5 +1,5 @@
-#ifndef SBIGNUM_H
-#define SBIGNUM_H
+#ifndef BIGNUM_H
+#define BIGNUM_H
 #include <string>
 #include "Ubignum.hpp"
 
