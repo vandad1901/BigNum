@@ -43,6 +43,18 @@ UBignum &UBignum::operator=(UBignum v2)
     swap(*this, v2);
     return *this;
 }
+UBignum &UBignum::operator=(int rhs)
+{
+    UBignum temp = UBignum(rhs);
+    swap(*this, temp);
+    return *this;
+}
+UBignum &UBignum::operator=(const char *rhs)
+{
+    UBignum temp = UBignum(rhs);
+    swap(*this, temp);
+    return *this;
+}
 UBignum &UBignum::operator+=(const UBignum &rhs)
 {
     UBignum lhs = (*this);
@@ -97,8 +109,8 @@ UBignum &UBignum::operator*=(const UBignum &rhs)
         for (int j = 0; j < rhs.length(); j++)
         {
             carry = (lhs[i] - '0') * (rhs[j] - '0') + ans[lhs.length() + rhs.length() - (i + j + 1)];
-            ans[lhs.length() + rhs.length() - (i + j + 1)] = carry % 10;  // v1+v2-1 to 1
-            ans[lhs.length() + rhs.length() - (i + j + 2)] += carry / 10; // v1+v2-2 to 0
+            ans[lhs.length() + rhs.length() - (i + j + 1)] = carry % 10;
+            ans[lhs.length() + rhs.length() - (i + j + 2)] += carry / 10;
         }
     }
 
@@ -117,34 +129,27 @@ UBignum &UBignum::operator/=(const UBignum &rhs)
         throw std::invalid_argument("Cannot divide by zero");
     }
     UBignum lhs = *this;
-    UBignum ans = 0, i;
-    for (i = 0; i < lhs; i = i + rhs)
+    UBignum l, r, m, sum;
+    l = "0", r = lhs;
+    while (l <= r)
     {
-        ans = ans + 1;
+        m = 0;
+        sum = l + r;
+        for (int i = 0, temp = 0; i <= sum.length(); temp = (temp % 2) * 10 + sum[sum.length() - (i++) - 1] - '0')
+            m = 10 * m + (temp / 2);
+        if (rhs * m <= lhs && lhs < rhs * (m + 1))
+        {
+            UBignum temp = UBignum(m);
+            swap(*this, temp);
+            return *this;
+        }
+        else if (rhs * (m + 1) <= lhs)
+            l = m;
+        else
+            r = m;
     }
-    UBignum temp = UBignum(ans - int(i > lhs));
-    swap(*this, temp);
-    return *this;
-}
-UBignum &UBignum::operator/=(const long long int &rhs)
-{
-    UBignum lhs = (*this);
-    std::string ans;
-    for (int i = 0, temp = 0; i <= lhs.length(); temp = (temp % rhs) * 10 + lhs[lhs.length() - (i++) - 1] - '0')
-        ans += (temp / rhs) + '0';
-
-    UBignum temp = UBignum(ans);
-    swap(*this, temp);
-    return *this;
 }
 UBignum &UBignum::operator%=(const UBignum &rhs)
-{
-    UBignum lhs = *this;
-    UBignum temp = UBignum(lhs - (lhs / rhs) * rhs);
-    swap(*this, temp);
-    return *this;
-}
-UBignum &UBignum::operator%=(const long long int &rhs)
 {
     UBignum lhs = *this;
     UBignum temp = UBignum(lhs - (lhs / rhs) * rhs);
@@ -219,17 +224,7 @@ UBignum operator/(UBignum lhs, const UBignum rhs)
     lhs /= rhs;
     return lhs;
 }
-UBignum operator/(UBignum lhs, const long long int rhs)
-{
-    lhs /= rhs;
-    return lhs;
-}
 UBignum operator%(UBignum lhs, const UBignum rhs)
-{
-    lhs %= rhs;
-    return lhs;
-}
-UBignum operator%(UBignum lhs, const long long int rhs)
 {
     lhs %= rhs;
     return lhs;

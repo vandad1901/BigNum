@@ -20,13 +20,13 @@ public:
     void setDigits(std::string);
     friend void swap(UBignum &, UBignum &);
     UBignum &operator=(UBignum);
+    UBignum &operator=(int);
+    UBignum &operator=(const char *);
     UBignum &operator+=(const UBignum &);
     UBignum &operator-=(const UBignum &);
     UBignum &operator*=(const UBignum &);
     UBignum &operator/=(const UBignum &);
-    UBignum &operator/=(const long long int &);
     UBignum &operator%=(const UBignum &);
-    UBignum &operator%=(const long long int &);
 
     int length() const;
     char operator[](int index) const;
@@ -42,9 +42,7 @@ public:
     friend UBignum operator-(UBignum lhs, const UBignum rhs);
     friend UBignum operator*(UBignum lhs, const UBignum rhs);
     friend UBignum operator/(UBignum lhs, const UBignum rhs);
-    friend UBignum operator/(UBignum lhs, const long long int rhs);
     friend UBignum operator%(UBignum lhs, const UBignum rhs);
-    friend UBignum operator%(UBignum lhs, const long long int rhs);
 
     void printDelimiter();
 };

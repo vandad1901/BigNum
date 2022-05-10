@@ -25,16 +25,15 @@ public:
     void setIsNegative(bool);
     friend void swap(Bignum &, Bignum &);
     Bignum &operator=(Bignum);
+    Bignum &operator=(int);
+    Bignum &operator=(const char *);
     Bignum operator+() const;
     Bignum operator-() const;
     Bignum &operator+=(const Bignum &);
     Bignum &operator-=(const Bignum &);
     Bignum &operator*=(const Bignum &);
     Bignum &operator/=(const Bignum &);
-    Bignum &operator/=(const long long int &);
     Bignum &operator%=(const Bignum &);
-    Bignum &operator%=(const long long int &);
-
     int length() const;
     char operator[](int index) const;
 
@@ -49,9 +48,7 @@ public:
     friend Bignum operator-(Bignum lhs, const Bignum rhs);
     friend Bignum operator*(Bignum lhs, const Bignum rhs);
     friend Bignum operator/(Bignum lhs, const Bignum rhs);
-    friend Bignum operator/(Bignum lhs, const long long int rhs);
     friend Bignum operator%(Bignum lhs, const Bignum rhs);
-    friend Bignum operator%(Bignum lhs, const long long int rhs);
 
     void printDelimiter();
 };

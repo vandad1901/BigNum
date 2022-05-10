@@ -52,6 +52,18 @@ Bignum &Bignum::operator=(Bignum v2)
     swap(*this, v2);
     return *this;
 }
+Bignum &Bignum::operator=(int rhs)
+{
+    Bignum temp = Bignum(rhs);
+    swap(*this, temp);
+    return *this;
+}
+Bignum &Bignum::operator=(const char *rhs)
+{
+    Bignum temp = Bignum(rhs);
+    swap(*this, temp);
+    return *this;
+}
 Bignum Bignum::operator+() const
 {
     return *this;
@@ -95,27 +107,13 @@ Bignum &Bignum::operator*=(const Bignum &rhs)
 Bignum &Bignum::operator/=(const Bignum &rhs)
 {
     Bignum ans = (*this).abs / rhs.abs;
-    ans.setIsNegative((*this).getIsNegative() ^ rhs.getIsNegative());
-    swap(*this, ans);
-    return *this;
-}
-Bignum &Bignum::operator/=(const long long int &rhs)
-{
-    Bignum ans = (*this).abs / rhs;
-    ans.setIsNegative((*this).getIsNegative() ^ (rhs < 0));
+    ans.setIsNegative((*this).getIsNegative() ^ (rhs.getIsNegative()));
     swap(*this, ans);
     return *this;
 }
 Bignum &Bignum::operator%=(const Bignum &rhs)
 {
     Bignum ans = (*this).abs % rhs.abs;
-    ans.setIsNegative((*this).getIsNegative());
-    swap(*this, ans);
-    return *this;
-}
-Bignum &Bignum::operator%=(const long long int &rhs)
-{
-    Bignum ans = (*this).abs % rhs;
     ans.setIsNegative((*this).getIsNegative());
     swap(*this, ans);
     return *this;
@@ -179,17 +177,7 @@ Bignum operator/(Bignum lhs, const Bignum rhs)
     lhs /= rhs;
     return lhs;
 }
-Bignum operator/(Bignum lhs, const long long int rhs)
-{
-    lhs /= rhs;
-    return lhs;
-}
 Bignum operator%(Bignum lhs, const Bignum rhs)
-{
-    lhs %= rhs;
-    return lhs;
-}
-Bignum operator%(Bignum lhs, const long long int rhs)
 {
     lhs %= rhs;
     return lhs;
