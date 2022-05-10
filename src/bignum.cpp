@@ -1,8 +1,8 @@
 #include <iostream>
-#include "sbignum.hpp"
+#include "bignum.hpp"
 #include "ubignum.hpp"
 
-SBignum::SBignum(std::string str)
+Bignum::Bignum(std::string str)
 {
     if (str[0] == '-' || str[0] == '+')
     {
@@ -15,56 +15,56 @@ SBignum::SBignum(std::string str)
     }
     setAbs(str);
 }
-SBignum::SBignum(long long int num)
+Bignum::Bignum(long long int num)
 {
     setAbs(num);
     setIsNegative(num < 0);
 }
-SBignum::SBignum(UBignum num, bool val)
+Bignum::Bignum(UBignum num, bool val)
 {
     setAbs(num);
     setIsNegative(val);
 }
 
-UBignum SBignum::getAbs() const
+UBignum Bignum::getAbs() const
 {
     return abs;
 }
-void SBignum::setAbs(UBignum str)
+void Bignum::setAbs(UBignum str)
 {
     abs = str;
 }
-bool SBignum::getIsNegative() const
+bool Bignum::getIsNegative() const
 {
     return isNegative;
 }
-void SBignum::setIsNegative(bool val)
+void Bignum::setIsNegative(bool val)
 {
     isNegative = val;
 }
-void swap(SBignum &v1, SBignum &v2)
+void swap(Bignum &v1, Bignum &v2)
 {
     std::swap(v1.abs, v2.abs);
     std::swap(v1.isNegative, v2.isNegative);
 }
-SBignum &SBignum::operator=(SBignum v2)
+Bignum &Bignum::operator=(Bignum v2)
 {
     swap(*this, v2);
     return *this;
 }
-SBignum SBignum::operator+() const
+Bignum Bignum::operator+() const
 {
     return *this;
 }
-SBignum SBignum::operator-() const
+Bignum Bignum::operator-() const
 {
-    SBignum temp = *this;
+    Bignum temp = *this;
     temp.setIsNegative(!getIsNegative());
     return temp;
 }
-SBignum &SBignum::operator+=(const SBignum &rhs)
+Bignum &Bignum::operator+=(const Bignum &rhs)
 {
-    SBignum lhs = *this, ans;
+    Bignum lhs = *this, ans;
     if (lhs.getIsNegative() == rhs.getIsNegative())
     {
         ans.setAbs(lhs.getAbs() + rhs.getAbs());
@@ -78,59 +78,59 @@ SBignum &SBignum::operator+=(const SBignum &rhs)
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator-=(const SBignum &rhs)
+Bignum &Bignum::operator-=(const Bignum &rhs)
 {
-    SBignum ans = SBignum((*this) + (-rhs));
+    Bignum ans = Bignum((*this) + (-rhs));
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator*=(const SBignum &rhs)
+Bignum &Bignum::operator*=(const Bignum &rhs)
 {
 
-    SBignum ans = (*this).abs * rhs.abs;
+    Bignum ans = (*this).abs * rhs.abs;
     ans.setIsNegative((*this).getIsNegative() ^ rhs.getIsNegative());
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator/=(const SBignum &rhs)
+Bignum &Bignum::operator/=(const Bignum &rhs)
 {
-    SBignum ans = (*this).abs / rhs.abs;
+    Bignum ans = (*this).abs / rhs.abs;
     ans.setIsNegative((*this).getIsNegative() ^ rhs.getIsNegative());
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator/=(const long long int &rhs)
+Bignum &Bignum::operator/=(const long long int &rhs)
 {
-    SBignum ans = (*this).abs / rhs;
+    Bignum ans = (*this).abs / rhs;
     ans.setIsNegative((*this).getIsNegative() ^ (rhs < 0));
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator%=(const SBignum &rhs)
+Bignum &Bignum::operator%=(const Bignum &rhs)
 {
-    SBignum ans = (*this).abs % rhs.abs;
+    Bignum ans = (*this).abs % rhs.abs;
     ans.setIsNegative((*this).getIsNegative());
     swap(*this, ans);
     return *this;
 }
-SBignum &SBignum::operator%=(const long long int &rhs)
+Bignum &Bignum::operator%=(const long long int &rhs)
 {
-    SBignum ans = (*this).abs % rhs;
+    Bignum ans = (*this).abs % rhs;
     ans.setIsNegative((*this).getIsNegative());
     swap(*this, ans);
     return *this;
 }
 
-int SBignum::length() const
+int Bignum::length() const
 {
     return getAbs().length();
 }
-char SBignum::operator[](int index) const
+char Bignum::operator[](int index) const
 {
     return getAbs()[index];
 }
 
-bool operator<(SBignum lhs, const SBignum rhs)
+bool operator<(Bignum lhs, const Bignum rhs)
 {
     if (lhs.getIsNegative() == rhs.getIsNegative())
     {
@@ -138,81 +138,81 @@ bool operator<(SBignum lhs, const SBignum rhs)
     }
     return lhs.getIsNegative();
 }
-bool operator>(SBignum lhs, const SBignum rhs)
+bool operator>(Bignum lhs, const Bignum rhs)
 {
     return rhs < lhs;
 }
-bool operator==(SBignum lhs, const SBignum rhs)
+bool operator==(Bignum lhs, const Bignum rhs)
 {
     return !(lhs > rhs) && !(lhs < rhs);
 }
-bool operator!=(SBignum lhs, const SBignum rhs)
+bool operator!=(Bignum lhs, const Bignum rhs)
 {
     return !(lhs == rhs);
 }
-bool operator<=(SBignum lhs, const SBignum rhs)
+bool operator<=(Bignum lhs, const Bignum rhs)
 {
     return lhs < rhs || lhs == rhs;
 }
-bool operator>=(SBignum lhs, const SBignum rhs)
+bool operator>=(Bignum lhs, const Bignum rhs)
 {
     return lhs > rhs || lhs == rhs;
 }
 
-SBignum operator+(SBignum lhs, const SBignum rhs)
+Bignum operator+(Bignum lhs, const Bignum rhs)
 {
     lhs += rhs;
     return lhs;
 }
-SBignum operator-(SBignum lhs, const SBignum rhs)
+Bignum operator-(Bignum lhs, const Bignum rhs)
 {
     lhs -= rhs;
     return lhs;
 }
-SBignum operator*(SBignum lhs, const SBignum rhs)
+Bignum operator*(Bignum lhs, const Bignum rhs)
 {
     lhs *= rhs;
     return lhs;
 }
-SBignum operator/(SBignum lhs, const SBignum rhs)
+Bignum operator/(Bignum lhs, const Bignum rhs)
 {
     lhs /= rhs;
     return lhs;
 }
-SBignum operator/(SBignum lhs, const long long int rhs)
+Bignum operator/(Bignum lhs, const long long int rhs)
 {
     lhs /= rhs;
     return lhs;
 }
-SBignum operator%(SBignum lhs, const SBignum rhs)
+Bignum operator%(Bignum lhs, const Bignum rhs)
 {
     lhs %= rhs;
     return lhs;
 }
-SBignum operator%(SBignum lhs, const long long int rhs)
+Bignum operator%(Bignum lhs, const long long int rhs)
 {
     lhs %= rhs;
     return lhs;
 }
 
-void SBignum::printDelimiter()
+void Bignum::printDelimiter()
 {
     if (getIsNegative())
         std::cout << "-";
     getAbs().printDelimiter();
 }
 
-std::ostream &operator<<(std::ostream &output, const SBignum &v)
+std::ostream &operator<<(std::ostream &output, const Bignum &v)
 {
     if (v.getIsNegative())
         output << '-';
     output << v.abs;
     return output;
 }
-std::istream &operator>>(std::istream &input, SBignum &v)
+std::istream &operator>>(std::istream &input, Bignum &v)
 {
     std::string temp;
     input >> temp;
-    v = SBignum(temp);
+    v = Bignum(temp);
     return input;
 }

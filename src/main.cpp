@@ -1,11 +1,11 @@
 #include <iostream>
 #include "ubignum.hpp"
-#include "sbignum.hpp"
+#include "bignum.hpp"
 using namespace std;
 
 int main()
 {
-    SBignum v1, v2;
+    Bignum v1, v2;
     long long int test = 12345;
     cin >> v1;
     cin >> v2;
