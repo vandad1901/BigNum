@@ -46,6 +46,10 @@ int main()
     cout << "v3 = \"500\"\ncout << v3 --> ";
     v3 = "500";
     cout << v3 << endl;
+    cout << "v3 += 150\ncout << v3 --> ";
+    v3 += 150;
+    cout << v3 << endl;
+
     cout << "\nSUBSCRIPT OPERATOR\n";
     for (int i = 0; i < v1.length(); i++)
     {
